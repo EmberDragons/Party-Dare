@@ -3,7 +3,8 @@ import { ressources } from "./ressources.js";
 import { Sprite } from "./sprite.js";
 import { vector2 } from "./vector2.js";
 
-const LERP_MULT = 0.25;
+const LERP_MULT = 0.1;
+const LERP_MULT_LESS = 0.1;
 
 export class Player {
     constructor({
@@ -19,10 +20,11 @@ export class Player {
                                   vFrames:4, 
                                   frame:0, 
                                   scale:0.1, 
-                                  position:startingPos});
+                                  position:startingPos,
+                                  isPixelated:true});
         this.position = new vector2(startingPos.x, startingPos.y);
 
-        this.speed=12;
+        this.speed=0.6;
         this.buildSpeed=0; //value that corresponds to t between 0 and 1 (will control speed of mvt)
 
         this.listKeys = list_all_movement_keys[p_id]; //for all inputs and keys
@@ -32,6 +34,9 @@ export class Player {
     update() {
         //called to update all var and sprite
         this.checkMvt()
+    }
+    draw() {
+        //called to update all var and sprite
         this.drawPlayer()
     }
     
@@ -69,18 +74,19 @@ export class Player {
             if (this.buildSpeed<1){
                 this.buildSpeed+=LERP_MULT;
             }
-            this.move(dir)
+            this.move(dir.multiply(this.buildSpeed));
         }
         else{
             //to smooth movement
             if (this.buildSpeed>0){
-                this.buildSpeed-=LERP_MULT;
+                this.buildSpeed-=LERP_MULT_LESS;
             }
         }
     }
 
     move(dir=new vector2(0,0)) {
-        this.position = this.position.add(dir);
+        var absolute_dir = dir.getAbsolute();
+        this.position = this.position.add(absolute_dir);
         this.updatePosSprite();
     }
 

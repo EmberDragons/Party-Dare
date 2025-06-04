@@ -1,8 +1,7 @@
-import { start_func } from "./main.js";
 class Ressources {
     constructor() {
         this.toLoad = {
-            player:"./javascript/src/player.png",
+            player:"./javascript/src/player-sprite.png",
             img_background:"./javascript/src/img_background.jpg",
         };
 
@@ -17,17 +16,10 @@ class Ressources {
             };
             img.onload=() => {
                 this.images[key].isLoaded=true;
-                nb_img_loaded+=1;
-                if (nb_img_loaded==Object.keys(this.toLoad).length){
-                    //then we can start the game
-                    console.log('loaded');
-                    start_func();
-                }
             };
         });
     }
 }
 
-var nb_img_loaded = 0;
 
 export const ressources = new Ressources();

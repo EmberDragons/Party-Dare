@@ -1,3 +1,6 @@
+
+const ABSOLUTE_SQRT = 0.71;
+
 export class vector2 {
     constructor(x=0,y=0) {
         this.x=x;
@@ -31,5 +34,15 @@ export class vector2 {
         /* method to get vector distance to ther point */
         let value = Math.sqrt((point.x-this.x)**2+(point.y-this.y**2));
         return value;
+    }
+
+    getAbsolute() {
+        if (this.x != 0 && this.y != 0){
+            let absolute_vec = new vector2(ABSOLUTE_SQRT*this.x, ABSOLUTE_SQRT*this.y);
+            return absolute_vec;
+        }
+        else {
+            return this;
+        }
     }
 }

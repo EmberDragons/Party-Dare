@@ -9,6 +9,7 @@ export class Sprite {
         frame, // number of the frame
         scale, // size of the image 
         position,
+        isPixelated,
     }) {
         this.ressource = _ressource;
 
@@ -21,6 +22,9 @@ export class Sprite {
         this.xScale = scale ?? 1;
         this.yScale = scale ?? 1;
         this.position = position ?? new vector2(0,0);
+
+        this.isPixelated=isPixelated ?? false;
+
         this.buildFrameMap();
     }
 
@@ -42,6 +46,12 @@ export class Sprite {
         if (!this.ressource.isLoaded) {
             return;
         }
+
+        // Set smoothing based on isPixelated property
+        ctx.imageSmoothingEnabled = !this.isPixelated;
+        ctx.webkitImageSmoothingEnabled = !this.isPixelated;
+        ctx.mozImageSmoothingEnabled = !this.isPixelated;
+
 
         // Find the sprite through the sprite sheet
         let frameCoordX=0;

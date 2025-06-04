@@ -1,3 +1,4 @@
+import { GameLoop } from './game_system.js';
 import { Player } from './player.js';
 import { ressources } from './ressources.js';
 import { Sprite } from './sprite.js';
@@ -5,8 +6,6 @@ import { vector2 } from './vector2.js';
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
-var HAS_STARTED = false;
-export const start_func=Start;
 
 var list_players = [];
 export const list_all_movement_keys = {"0":["z","s","q","d"],
@@ -39,16 +38,7 @@ window.addEventListener("keyup", (event) => {
 });
 
 
-const draw_main = () => {
-    //first draw background
-    background_sprite.drawSprite(ctx);
-    //then players
-    for (let p in list_players) {
-        list_players[p].update();
-    }
-}
-
-function addPlayer(){
+export const addPlayer = () => {
     
     console.log("player added");
     let nb_players=list_players.length;
@@ -60,16 +50,25 @@ function addPlayer(){
 }
 
 //main code part
-function Start() {
-    HAS_STARTED=true;
-    console.log('started');
-    addPlayer();
+const update = () =>{
+    //player logic
+    for (let id in list_players) {
+        list_players[id].update();
+    }
+
+
+}
+
+const draw = () => {
+    //first draw background
+    background_sprite.drawSprite(ctx);
+    
+    //player logic
+    for (let id in list_players) {
+        list_players[id].draw();
+    }
 }
 
 
-//all intervalls (based on one only (ik this is smart))
-setInterval(() => {
-    if (HAS_STARTED){
-        draw_main();
-    }
-},100);
+const gameLoop = new GameLoop(update, draw);
+gameLoop.start();
