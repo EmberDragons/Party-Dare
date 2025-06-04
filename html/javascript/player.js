@@ -2,9 +2,10 @@ import { list_all_movement_keys } from "./main.js";
 import { ressources } from "./ressources.js";
 import { Sprite } from "./sprite.js";
 import { vector2 } from "./vector2.js";
+import { Animation } from "./animation.js";
+import { AnimationHandler } from "./animation.js";
 
-const LERP_MULT = 0.1;
-const LERP_MULT_LESS = 0.1;
+const LERP_MULT = 0.07;
 
 export class Player {
     constructor({
@@ -14,35 +15,48 @@ export class Player {
     }) {
         this.ctx=ctx;
         this.playerId = p_id;
-        this.sprite = new Sprite({_ressource:ressources.images.player, 
-                                  frameSize:new vector2(330,500),
-                                  hFrames:4, 
-                                  vFrames:4, 
-                                  frame:0, 
-                                  scale:0.1, 
+        let startFrame = 6;
+        this.sprite = new Sprite({_ressource:ressources.images["player_"+(p_id+1).toString()], 
+                                  frameSize:new vector2(32,34),
+                                  hFrames:6, 
+                                  vFrames:2, 
+                                  frame:startFrame, 
+                                  scale:1, 
                                   position:startingPos,
-                                  isPixelated:true});
+                                  isPixelated:false});
         this.position = new vector2(startingPos.x, startingPos.y);
 
-        this.speed=0.6;
+        this.speed=1;
         this.buildSpeed=0; //value that corresponds to t between 0 and 1 (will control speed of mvt)
 
+        //inputs
         this.listKeys = list_all_movement_keys[p_id]; //for all inputs and keys
         this.keyControlSetUp();
+
+        this.isMoving = false;
+        this.flipX = false; //rotate the img
+
+        //animation
+        this.frameRateAnimation = 9; //corresponds to ... fps
+        this.setAnimationHandler(startFrame = startFrame);
+
+
+        //updates first
         this.update();
-    } 
+    }
     update() {
         //called to update all var and sprite
-        this.checkMvt()
+        this.checkMvt();
+        this.handleAnim();
     }
     draw() {
         //called to update all var and sprite
-        this.drawPlayer()
+        this.drawPlayer();
     }
     
     /* Player drawing part */
     drawPlayer() {
-        this.sprite.drawSprite(this.ctx);
+        this.sprite.drawSprite(this.ctx, this.flipX);
     }
     switchFrame(frameId) {
         this.sprite.frame=frameId;
@@ -70,16 +84,31 @@ export class Player {
                 }
             }
         }
+        //animation/rotation
+        if (dir.x<0){
+            this.flipX = true;
+        }
+        else{
+            this.flipX = false;
+        }
+
+        //normal vector for dir multiplications and maths
         if (dir.getVectLength()!=0){
+            this.isMoving=true;
             if (this.buildSpeed<1){
                 this.buildSpeed+=LERP_MULT;
             }
             this.move(dir.multiply(this.buildSpeed));
         }
         else{
+            //set to a int pos
+            if (this.isMoving) {
+                this.sprite.setPosInt();
+                this.isMoving=false;
+            }
             //to smooth movement
             if (this.buildSpeed>0){
-                this.buildSpeed-=LERP_MULT_LESS;
+                this.buildSpeed=0;
             }
         }
     }
@@ -88,6 +117,25 @@ export class Player {
         var absolute_dir = dir.getAbsolute();
         this.position = this.position.add(absolute_dir);
         this.updatePosSprite();
+    }
+
+    /*Animation Part*/
+    setAnimationHandler() {
+        let dic_anims = {'idle':new Animation({name:'idle',frameStart:6,frameEnd:9}),
+                         'running':new Animation({name:'running',frameStart:0,frameEnd:5}),
+        };
+
+        this.animHandler = new AnimationHandler(dic_anims, 'idle', this.sprite, this.frameRateAnimation);
+    }
+
+    handleAnim() {
+        if (this.isMoving){
+            this.animHandler.setAnim("running");
+        }
+        else{
+            this.animHandler.setAnim("idle");
+        }
+        this.animHandler.updateAnim();
     }
 
     /* Player control part */

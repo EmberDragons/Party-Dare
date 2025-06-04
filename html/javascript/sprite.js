@@ -41,17 +41,27 @@ export class Sprite {
             }
         }
     }
-    drawSprite(ctx, x=this.position.x, y=this.position.y) {
+
+    drawSprite(ctx, flipX=false, x=this.position.x, y=this.position.y) {
         /*method to draw images on screen*/
         if (!this.ressource.isLoaded) {
             return;
         }
 
+        ctx.save();
         // Set smoothing based on isPixelated property
         ctx.imageSmoothingEnabled = !this.isPixelated;
         ctx.webkitImageSmoothingEnabled = !this.isPixelated;
         ctx.mozImageSmoothingEnabled = !this.isPixelated;
 
+        let posMult=1;
+        if (flipX) {
+            ctx.translate(x + this.frameSize.x * this.xScale, y);
+            ctx.scale(-1, 1);
+            posMult=-1;
+        } else {
+            ctx.translate(x, y);
+        }
 
         // Find the sprite through the sprite sheet
         let frameCoordX=0;
@@ -71,17 +81,25 @@ export class Sprite {
             frameCoordY,
             frameSizeX, // how we crop the image
             frameSizeY,
-            this.position.x,
+            this.position.x*posMult,
             this.position.y,
             frameSizeX*this.xScale,
             frameSizeY*this.yScale,
         );
+        ctx.restore();
     }
 
     //player position updates
     updatePosition(pos, t) {
         /*lerping to the player pos*/
         this.position = maths.lerp(this.position, pos, t)
+
+    }
+
+    setPosInt(){
+        //set to int pos
+        this.position.x=Math.round(this.position.x);
+        this.position.y=Math.round(this.position.y);
     }
 
 }

@@ -6,10 +6,11 @@ import { vector2 } from './vector2.js';
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
+export const FRAMERATE = 60;
 
 var list_players = [];
 export const list_all_movement_keys = {"0":["z","s","q","d"],
-                                "1":["ArrowUp","ArrowDown","ArrowRight","ArrowLeft"],
+                                "1":["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"],
                                 "2":["o","l","k","m"],
 };
 
@@ -39,7 +40,6 @@ window.addEventListener("keyup", (event) => {
 
 
 export const addPlayer = () => {
-    
     console.log("player added");
     let nb_players=list_players.length;
     var player = new Player({
@@ -64,11 +64,22 @@ const draw = () => {
     background_sprite.drawSprite(ctx);
     
     //player logic
-    for (let id in list_players) {
+    //we want to draw them based on their z (y) position
+    let list_players_priorities = list_players;
+    for (let id in list_players_priorities) {
+        if (id>0 && list_players_priorities[id-1].position.y > list_players_priorities[id].position.y){
+            //swap places
+            let temp_var = list_players_priorities[id-1];
+            list_players_priorities[id-1] = list_players_priorities[id]
+            list_players_priorities[id] = temp_var;
+        }
+    }
+    for (let id in list_players_priorities) {
         list_players[id].draw();
     }
 }
 
+document.getElementById('add_player').addEventListener('click', addPlayer);
 
 const gameLoop = new GameLoop(update, draw);
 gameLoop.start();

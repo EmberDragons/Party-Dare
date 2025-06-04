@@ -1,7 +1,9 @@
 class Ressources {
     constructor() {
         this.toLoad = {
-            player:"./javascript/src/player-sprite.png",
+            player_1:"./javascript/src/p1.png",
+            player_2:"./javascript/src/p2.png",
+            player_3:"./javascript/src/p3.png",
             img_background:"./javascript/src/img_background.jpg",
         };
 
@@ -20,6 +22,5 @@ class Ressources {
         });
     }
 }
-
 
 export const ressources = new Ressources();
