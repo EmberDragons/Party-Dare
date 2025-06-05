@@ -1,4 +1,5 @@
 import { list_all_movement_keys } from "./main.js";
+import { WINDOW_SIZE } from "./main.js";
 import { ressources } from "./ressources.js";
 import { Sprite } from "./sprite.js";
 import { vector2 } from "./vector2.js";
@@ -28,6 +29,9 @@ export class Player {
 
         this.speed=1;
         this.buildSpeed=0; //value that corresponds to t between 0 and 1 (will control speed of mvt)
+
+        //bounds
+        this.height_mult = 0.5;
 
         //inputs
         this.listKeys = list_all_movement_keys[p_id]; //for all inputs and keys
@@ -94,6 +98,7 @@ export class Player {
 
         //normal vector for dir multiplications and maths
         if (dir.getVectLength()!=0){
+            dir = this.checkOutOfBounds(dir)
             this.isMoving=true;
             if (this.buildSpeed<1){
                 this.buildSpeed+=LERP_MULT;
@@ -111,6 +116,29 @@ export class Player {
                 this.buildSpeed=0;
             }
         }
+    }
+
+    checkOutOfBounds(dir) {
+        let pos = this.position.add(dir);
+        console.log(pos, WINDOW_SIZE);
+        if (pos.x >0 && pos.x < WINDOW_SIZE.x) {
+            //only go in one direction
+            if (pos.y > WINDOW_SIZE.y && pos.y < WINDOW_SIZE.y*3) {
+                return dir;
+            }
+            else{
+                return new vector2(dir.x,0); 
+            }
+        } if (pos.y > WINDOW_SIZE.y && pos.y < WINDOW_SIZE.y*3) {
+            //only go in one direction
+            if (pos.x >0 && pos.x < WINDOW_SIZE.x) {
+                return dir;
+            }
+            else{
+                return new vector2(0,dir.y); 
+            }
+        }
+        return new vector2();
     }
 
     move(dir=new vector2(0,0)) {

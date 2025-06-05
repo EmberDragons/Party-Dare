@@ -14,13 +14,18 @@ export const list_all_movement_keys = {"0":["z","s","q","d"],
                                 "2":["o","l","k","m"],
 };
 
+// important var
+const WINDOW_SIZE_MULT = 0.1665;
+export const WINDOW_SIZE = new vector2(130,20); //set by me duh
+console.log(WINDOW_SIZE);
+
 //image set up
 const background_sprite = new Sprite({
     _ressource:ressources.images.img_background,
     frameSize:new vector2(1800,2000),
     hFrames:0,
     vFrames:0,
-    scale:0.1665,
+    scale:WINDOW_SIZE_MULT,
 });
 
 
@@ -45,6 +50,7 @@ export const addPlayer = () => {
     var player = new Player({
         ctx:ctx,
         p_id:nb_players,
+        startingPos:new vector2(Math.round(WINDOW_SIZE.x/2),Math.round(WINDOW_SIZE.y/2)+12),
     });
     list_players.push(player);
 }

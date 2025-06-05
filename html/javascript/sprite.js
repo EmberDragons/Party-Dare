@@ -92,8 +92,7 @@ export class Sprite {
     //player position updates
     updatePosition(pos, t) {
         /*lerping to the player pos*/
-        this.position = maths.lerp(this.position, pos, t)
-
+        this.position = maths.lerp(this.position, pos, t);
     }
 
     setPosInt(){
