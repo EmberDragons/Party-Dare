@@ -10,3 +10,53 @@ html, body {
     background-color: aliceblue;
     width: 100%;
 }
+
+.button {
+    color:rgb(218, 107, 107);
+    background-color: rgb(98, 98, 98);
+    margin-top: 20px;
+    margin-bottom: 30px;
+    margin-left: 20px;
+    font-size: 30px;
+    border-radius: 10px;
+    transition: 0.2s linear;
+}
+
+.button:hover{
+    cursor: pointer;
+    color:rgb(255, 245, 245);
+}
+
+.button:active{
+    color:rgb(0, 0, 0);
+    border-radius: 3px;
+}
+
+.centered {
+    position: absolute;
+    right:50%;
+    left:40%; /*or not...*/
+    width:90px;
+}
+
+.input {
+    color:rgb(86, 86, 86);
+    background-color: rgb(230, 229, 229);
+    margin-top: 20px;
+    margin-bottom: 30px;
+    margin-left: 20px;
+    font-size: 30px;
+    border-radius: 10px;
+}
+
+.players {
+    text-align: center;
+    color:rgb(218, 107, 107);
+    background-color: rgb(98, 98, 98);
+    width:30%;
+    height: 30px;
+    margin-top: 2px;
+    margin-left: 20px;
+    font-size: 24px;
+    border-radius: 10px;
+}

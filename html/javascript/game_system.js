@@ -1,5 +1,4 @@
-import { addPlayer } from "./main.js";
-import { FRAMERATE } from "./main.js";
+import { setPlayer,FRAMERATE } from "./main.js";
 export class GameLoop{
     constructor(update, render){
 
@@ -35,7 +34,7 @@ export class GameLoop{
     }
 
     start() {
-        addPlayer();
+        setPlayer();
         if (!this.isRunning) {
             this.isRunning=true;
             this.rafTd=requestAnimationFrame(this.mainLoop);
