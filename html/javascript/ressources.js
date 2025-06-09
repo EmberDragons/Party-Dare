@@ -6,6 +6,7 @@ class Ressources {
             player_3:"./javascript/src/p3.png",
             img_background:"./javascript/src/img_background.jpg",
             circle:"./javascript/src/circle.png",
+            horizontal:"./javascript/src/horizontal.png",
         };
 
         this.images={};

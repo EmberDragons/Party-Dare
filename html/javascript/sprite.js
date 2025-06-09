@@ -35,6 +35,13 @@ export class Sprite {
         this.yScale=scale;
     }
 
+    updateSizeY(scale) {
+        this.yScale = scale;
+    }
+    updateSizeX(scale) {
+        this.xScale = scale;
+    }
+
     buildFrameMap() {
         /*method to set up animation frames*/
         let frameCount = 0;

@@ -78,11 +78,13 @@ export class GameLoop{
     }
 
     end(id=null) {
-        let nb = Math.round(Math.random()*(BETS.length-1));
-        this.bet = "damn that was cool...";
-        if (id != null)
-            this.bet = id+BETS[nb];
-        this.text = new Text(this.bet);
+        if (this.text == undefined){
+            let nb = Math.round(Math.random()*(BETS.length-1));
+            this.bet = "damn that was cool...";
+            if (id != null)
+                this.bet = id+BETS[nb];
+            this.text = new Text(this.bet);
+        }
     }
 
     next_game() {
