@@ -4,7 +4,7 @@ import { Sprite } from "./sprite.js";
 import { ressources } from "./ressources.js";
 import { Player } from "./player.js";
 
-const MAX_STRENGTH = 10;
+const MAX_STRENGTH = 8;
 const MAX_SIZE = 3;
 const MIN_SIZE = 0.5;
 
@@ -324,7 +324,7 @@ class AttackManager {
         this.difficultyUp = Date.now();
     }
     update() {
-        if (Date.now()-this.difficultyUp> 15000){
+        if (Date.now()-this.difficultyUp> 22000){
             //we up the diff every ... secs
             MAX_NB_ATT++;
             console.log(MAX_NB_ATT);
@@ -349,7 +349,7 @@ class AttackManager {
 
             //net attack set up
             let currStr = this.getRandomStrength()+(this.timer-this.start)*0.003;
-            this.delta = (500+(this.base_delta/currStr)*2);
+            this.delta = (600+(this.base_delta/currStr)*2);
             this.size = (this.base_size+currStr);
         }
         for (let i in this.attacks){
