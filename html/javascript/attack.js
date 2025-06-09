@@ -2,9 +2,13 @@ import { list_players, ctx, WINDOW_SIZE } from "./main.js";
 import { vector2 } from "./vector2.js";
 import { Sprite } from "./sprite.js";
 import { ressources } from "./ressources.js";
+import { Player } from "./player.js";
 
 const MAX_STRENGTH = 5;
+const MAX_SIZE = 3;
 const MIN_SIZE = 0.5;
+
+const MAX_NB_ATT = 8;
 
 class AttackCircle {
     constructor ({
@@ -15,6 +19,9 @@ class AttackCircle {
         this.radius = rad;
         if (rad<MIN_SIZE){
             this.radius=MIN_SIZE;
+        }
+        if (rad>MAX_SIZE){
+            this.radius=MAX_SIZE;
         }
 
         this.speed = speed;
@@ -27,17 +34,25 @@ class AttackCircle {
             position:pos,
             isPixelated:true,
             opacity:0.6});
+        this.alert_sprite = new Sprite({_ressource:ressources.images["circle"], 
+            frameSize:new vector2(32,32), 
+            scale:this.radius, 
+            position:pos,
+            isPixelated:true,
+            opacity:0.2});
+
         this.render = true;
         this.current_radius = 0;
     }
     update() {
         this.sprite.position = this.position;
+        this.alert_sprite.position = this.position;
         if (this.current_radius<this.radius)
             this.current_radius+=this.speed;
         else{
             this.destroy();
         }
-        if (this.current_radius>=this.radius*0.8){
+        if (this.current_radius>=this.radius*0.99){
             //kill players inside
             this.sprite.opacity=1;
             this.kill();
@@ -45,23 +60,31 @@ class AttackCircle {
     }
     draw() {
         if (this.render){
-            const drawX = this.sprite.position.x - (this.sprite.frameSize.x * this.sprite.xScale) / 2;
-            const drawY = this.sprite.position.y - (this.sprite.frameSize.y * this.sprite.yScale) / 2;
-            this.sprite.drawSprite(ctx, false, drawX, drawY);
-            this.sprite.updateSize(this.current_radius*1.1);
+            const DrawX = this.position.x - (this.sprite.frameSize.x * this.sprite.xScale) / 2;
+            const DrawY = this.position.y - (this.sprite.frameSize.y * this.sprite.yScale) / 2;
+            this.sprite.drawSprite(ctx, false, DrawX, DrawY);
+            this.alert_sprite.drawSprite(ctx, false);
+            this.sprite.updateSize(this.current_radius);
         }
     }
 
     kill() {
         if (this.render){
             for (let i in list_players){
-                const attackRadius = this.sprite.frameSize.x * this.sprite.xScale / 2;
+                var attackRadius = this.current_radius*16;
+
                 const playerCenter = new vector2(
-                    list_players[i].position.x + list_players[i].sprite.frameSize.x / 2,
-                    list_players[i].position.y + list_players[i].sprite.frameSize.y / 2
+                    list_players[i].position.x + list_players[i].sprite.frameSize.x * list_players[i].sprite.xScale / 2,
+                    list_players[i].position.y + list_players[i].sprite.frameSize.y * list_players[i].sprite.yScale / 2
                 );
-                this.test_position = playerCenter;
-                if (playerCenter.getVectDist(this.position)<attackRadius){
+                const DrawX = playerCenter.x - (list_players[i].sprite.frameSize.x * list_players[i].sprite.xScale) / 2;
+                const DrawY = playerCenter.y - (list_players[i].sprite.frameSize.y * list_players[i].sprite.yScale) / 2;
+
+                const pos = new vector2(DrawX, DrawY);
+                const attPos = new vector2(this.position.x-9,this.position.y-9);
+                
+                const distBetween = Math.sqrt(((attPos.x-pos.x)**2+(attPos.y-pos.y)**2))
+                if (distBetween<attackRadius*0.84-this.current_radius*2){ //safe dist
                     list_players[i].death();
                 }
             }
@@ -71,6 +94,14 @@ class AttackCircle {
 
     destroy(){
         this.render = false;
+        let ind = 0;
+        for (let i in attackManager.attacks) {
+            if (attackManager.attacks[i] == this) {
+                ind=i;
+                break;
+            }
+        }
+        attackManager.attackstoRemove.push(ind);
     }
 }
 
@@ -84,6 +115,8 @@ class AttackManager {
         this.delta = 2000;
         this.size = 0;
         this.attacks = [];
+
+        this.attackstoRemove=[];
     }
     update() {
         
@@ -91,7 +124,9 @@ class AttackManager {
             this.timer = Date.now();
             let pos = this.getPos();
             let att = new AttackCircle({pos:pos, rad:this.size/15, speed:10/(this.delta)});
-            this.attacks.push(att)
+            console.log(this.attacks);
+            if (this.attacks.length<MAX_NB_ATT)
+                this.attacks.push(att);
 
             //net attack set up
             let currStr = this.getRandomStrength()+(this.timer-this.start)*0.003;
@@ -99,12 +134,23 @@ class AttackManager {
             this.size = (this.base_size+currStr);
         }
         for (let i in this.attacks){
-            this.attacks[i].update()
+            this.attacks[i].update();
+        }
+        this.removeEndedAttacks();
+    }
+    removeEndedAttacks() {
+        if (this.attackstoRemove.length>0){
+            this.attackstoRemove.sort();
+            this.attackstoRemove.reverse();
+            for (let attack in this.attackstoRemove){
+                attackManager.attacks = attackManager.attacks.slice(attack);
+            }
+            this.attackstoRemove = [];
         }
     }
     draw() {
         for (let i in this.attacks){
-            this.attacks[i].draw()
+            this.attacks[i].draw();
         }
     }
     getRandomStrength() {

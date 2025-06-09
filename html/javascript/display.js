@@ -19,7 +19,7 @@ export class Text {
         style.animation = "BET_ANIMATION_IN 4s ease";
         setTimeout(() => {
             this.end_anim()
-        }, "2500"
+        }, "4000"
         );
     }
 
@@ -28,7 +28,7 @@ export class Text {
         style.animation = "BET_ANIMATION_OUT 4s ease";
         setTimeout(() => {
             this.end()
-        }, "2500"
+        }, "4000"
         );
     }
 
