@@ -378,7 +378,7 @@ class AttackManager {
     }
 
     getPos(){
-        let nb = getRandomInt(1);
+        let nb = getRandomInt(2);
         if (nb==0) {
             let pos = new vector2(0,0);
             pos.x = getRandomInt(WINDOW_SIZE.x);
