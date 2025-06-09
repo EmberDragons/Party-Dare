@@ -8,7 +8,7 @@ const MAX_STRENGTH = 5;
 const MAX_SIZE = 3;
 const MIN_SIZE = 0.5;
 
-const MAX_NB_ATT = 4;
+var MAX_NB_ATT = 4;
 
 class AttackCircle {
     constructor ({
@@ -322,9 +322,16 @@ class AttackManager {
         this.attacks = [];
 
         this.attackstoRemove=[];
+
+        this.difficultyUp = Date.now();
     }
     update() {
-        
+        if (Date.now()-this.difficultyUp> 30000){
+            //we up the diff every 30 secs
+            MAX_NB_ATT++;
+            this.difficultyUp=Date.now();
+        }
+
         if (Date.now()-this.timer > this.delta){
             this.timer = Date.now();
             let pos = this.getPos();
