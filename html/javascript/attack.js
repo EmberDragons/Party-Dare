@@ -324,7 +324,7 @@ class AttackManager {
         this.difficultyUp = Date.now();
     }
     update() {
-        if (Date.now()-this.difficultyUp> 5000){
+        if (Date.now()-this.difficultyUp> 15000){
             //we up the diff every ... secs
             MAX_NB_ATT++;
             console.log(MAX_NB_ATT);
