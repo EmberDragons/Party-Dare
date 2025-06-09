@@ -4,7 +4,7 @@ import { Sprite } from "./sprite.js";
 import { ressources } from "./ressources.js";
 import { Player } from "./player.js";
 
-const MAX_STRENGTH = 5;
+const MAX_STRENGTH = 10;
 const MAX_SIZE = 3;
 const MIN_SIZE = 0.5;
 
@@ -184,7 +184,6 @@ class AttackHorizontal {
                 this.position=pos;
                 
                 const distBetween = Math.sqrt((attPos-pos)**2)
-                console.log(pos, attPos, distBetween, attackSize);
 
                 if (distBetween<attackSize){ 
                     list_players[i].death();
@@ -287,7 +286,6 @@ class AttackVertical {
                 this.position=pos;
                 
                 const distBetween = Math.sqrt((attPos-pos)**2)
-                console.log(pos, attPos, distBetween, attackSize);
 
                 if (distBetween<attackSize){ 
                     list_players[i].death();
@@ -326,9 +324,10 @@ class AttackManager {
         this.difficultyUp = Date.now();
     }
     update() {
-        if (Date.now()-this.difficultyUp> 30000){
-            //we up the diff every 30 secs
+        if (Date.now()-this.difficultyUp> 5000){
+            //we up the diff every ... secs
             MAX_NB_ATT++;
+            console.log(MAX_NB_ATT);
             this.difficultyUp=Date.now();
         }
 
@@ -344,13 +343,13 @@ class AttackManager {
                 att = new AttackHorizontal({pos:pos, size:this.size/15, speed:10/(this.delta)});
             if(attackType == 2)
                 att = new AttackVertical({pos:pos, size:this.size/15, speed:10/(this.delta)});
-            
+            if (attackType == 3) console.error("wtf");
             if (this.attacks.length<MAX_NB_ATT)
                 this.attacks.push(att);
 
             //net attack set up
             let currStr = this.getRandomStrength()+(this.timer-this.start)*0.003;
-            this.delta = (800+(this.base_delta/currStr)*2);
+            this.delta = (500+(this.base_delta/currStr)*2);
             this.size = (this.base_size+currStr);
         }
         for (let i in this.attacks){
@@ -396,4 +395,4 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-export const attackManager = new AttackManager(6000,2);
+export const attackManager = new AttackManager(2000,2);
