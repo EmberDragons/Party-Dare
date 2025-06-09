@@ -46,7 +46,6 @@ class AttackCircle {
     }
     update() {
         this.sprite.position = this.position;
-        this.alert_sprite.position = this.position;
         if (this.current_radius<this.radius)
             this.current_radius+=this.speed;
         else{
@@ -63,7 +62,7 @@ class AttackCircle {
             const DrawX = this.position.x - (this.sprite.frameSize.x * this.sprite.xScale) / 2;
             const DrawY = this.position.y - (this.sprite.frameSize.y * this.sprite.yScale) / 2;
             this.sprite.drawSprite(ctx, false, DrawX, DrawY);
-            this.alert_sprite.drawSprite(ctx, false);
+            this.alert_sprite.drawSprite(ctx, false, this.position.x-16*this.radius, this.position.y-16*this.radius);
             this.sprite.updateSize(this.current_radius);
         }
     }
