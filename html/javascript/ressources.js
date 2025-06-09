@@ -5,6 +5,7 @@ class Ressources {
             player_2:"./javascript/src/p2.png",
             player_3:"./javascript/src/p3.png",
             img_background:"./javascript/src/img_background.jpg",
+            circle:"./javascript/src/circle.png",
         };
 
         this.images={};

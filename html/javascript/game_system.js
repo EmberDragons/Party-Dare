@@ -14,6 +14,8 @@ export class GameLoop{
 
         this.rafTd = null;
         this.isRunning = false;
+
+        this.firstDeath = null;
     }
     
     mainLoop = (timeStamp) => {
@@ -71,15 +73,15 @@ export class GameLoop{
             }
             localStorage.setItem("player_victories", storage_vict);
             this.stop();
-            this.end(list_players[players_id[0]]);
+            this.end(this.firstDeath);
         }
     }
 
     end(id=null) {
-        let nb = Math.round((Date.now())**2)%(BETS.length-1);
+        let nb = Math.round(Math.random()*(BETS.length-1));
         this.bet = "damn that was cool...";
         if (id != null)
-            this.bet = id.name_player+BETS[nb];
+            this.bet = id+BETS[nb];
         this.text = new Text(this.bet);
     }
 

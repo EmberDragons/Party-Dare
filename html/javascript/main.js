@@ -3,9 +3,10 @@ import { Player } from './player.js';
 import { ressources } from './ressources.js';
 import { Sprite } from './sprite.js';
 import { vector2 } from './vector2.js';
+import { attackManager } from './attack.js';
 
 const canvas = document.querySelector("#canvas");
-const ctx = canvas.getContext("2d");
+export const ctx = canvas.getContext("2d");
 export const FRAMERATE = 60;
 
 export var list_players = [];
@@ -67,6 +68,7 @@ const update = () =>{
     for (let id in list_players) {
         list_players[id].update();
     }
+    attackManager.update();
 }
 
 const draw = () => {
@@ -87,6 +89,7 @@ const draw = () => {
     for (let id in list_players_priorities) {
         list_players[id].draw();
     }
+    attackManager.draw();
 }
 
 

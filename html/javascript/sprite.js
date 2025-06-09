@@ -10,6 +10,7 @@ export class Sprite {
         scale, // size of the image 
         position,
         isPixelated,
+        opacity,
     }) {
         this.ressource = _ressource;
 
@@ -24,8 +25,14 @@ export class Sprite {
         this.position = position ?? new vector2(0,0);
 
         this.isPixelated=isPixelated ?? false;
+        this.opacity = opacity ?? 1;
 
         this.buildFrameMap();
+    }
+
+    updateSize(scale) {
+        this.xScale=scale;
+        this.yScale=scale;
     }
 
     buildFrameMap() {
@@ -75,6 +82,7 @@ export class Sprite {
         const frameSizeX = this.frameSize.x;
         const frameSizeY = this.frameSize.y;
         // Actually drawing the sprite
+        ctx.globalAlpha = this.opacity; 
         ctx.drawImage(
             this.ressource.image,
             frameCoordX, // getting the frame size + pos ready

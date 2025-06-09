@@ -59,7 +59,7 @@ export class Player {
     }
     draw() {
         //called to update all var and sprite
-        if (this. render)
+        if (this.render)
             this.drawPlayer();
     }
     
@@ -199,5 +199,9 @@ export class Player {
     death() {
         this.alive = false;
         this.render = false;
+
+        if (gameLoop.firstDeath == null){
+            gameLoop.firstDeath = this.name_player;
+        }
     }
 }

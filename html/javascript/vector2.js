@@ -32,7 +32,7 @@ export class vector2 {
     }
     getVectDist(point) {
         /* method to get vector distance to ther point */
-        let value = Math.sqrt((point.x-this.x)**2+(point.y-this.y**2));
+        let value = Math.sqrt((point.x-this.x)**2+(point.y-this.y)**2);
         return value;
     }
 

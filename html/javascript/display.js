@@ -16,7 +16,7 @@ export class Text {
 
     start_anim() {
         let style = document.getElementById("BET").style;
-        style.animation = "BET_ANIMATION_IN 2.5s ease";
+        style.animation = "BET_ANIMATION_IN 4s ease";
         setTimeout(() => {
             this.end_anim()
         }, "2500"
@@ -25,7 +25,7 @@ export class Text {
 
     end_anim() {
         let style = document.getElementById("BET").style;
-        style.animation = "BET_ANIMATION_OUT 2.5s ease";
+        style.animation = "BET_ANIMATION_OUT 4s ease";
         setTimeout(() => {
             this.end()
         }, "2500"
