@@ -1,4 +1,4 @@
-import { list_all_movement_keys } from "./main.js";
+import { gameLoop, list_all_movement_keys } from "./main.js";
 import { WINDOW_SIZE } from "./main.js";
 import { ressources } from "./ressources.js";
 import { Sprite } from "./sprite.js";
@@ -12,10 +12,14 @@ export class Player {
     constructor({
         ctx,
         p_id,
+        name_player,
         startingPos=new vector2(0,0),
     }) {
+        this.alive=true;
+        this.render=true;
         this.ctx=ctx;
         this.playerId = p_id;
+        this.name_player = name_player;
         let startFrame = 6;
         this.sprite = new Sprite({_ressource:ressources.images["player_"+(p_id+1).toString()], 
                                   frameSize:new vector2(32,34),
@@ -55,7 +59,8 @@ export class Player {
     }
     draw() {
         //called to update all var and sprite
-        this.drawPlayer();
+        if (this. render)
+            this.drawPlayer();
     }
     
     /* Player drawing part */
@@ -120,7 +125,7 @@ export class Player {
 
     checkOutOfBounds(dir) {
         let pos = this.position.add(dir);
-        console.log(pos, WINDOW_SIZE);
+        //console.log(pos, WINDOW_SIZE);
         if (pos.x >0 && pos.x < WINDOW_SIZE.x) {
             //only go in one direction
             if (pos.y > WINDOW_SIZE.y && pos.y < WINDOW_SIZE.y*3) {
@@ -189,5 +194,10 @@ export class Player {
                 console.error('ERROR : KEY MESSED UP');
             }
         }
+    }
+
+    death() {
+        this.alive = false;
+        this.render = false;
     }
 }

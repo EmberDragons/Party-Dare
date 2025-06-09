@@ -1,4 +1,6 @@
-import { setPlayer,FRAMERATE } from "./main.js";
+import { BETS } from "./bet.js";
+import { Text } from "./display.js";
+import { list_players,list_victories,setPlayer,FRAMERATE } from "./main.js";
 export class GameLoop{
     constructor(update, render){
 
@@ -27,6 +29,7 @@ export class GameLoop{
             this.update(this.timeStep);
             this.accumulatedTime -= this.timeStep;
         }
+        this.checkEnd(); //to be sure we haven't rech the end
 
         this.render();
 
@@ -46,5 +49,41 @@ export class GameLoop{
             cancelAnimationFrame(this.rafId);
         }
         this.isRunning=false;
+    }
+
+    checkEnd() {
+        let players_id = [];
+        let storage_vict = "";
+        
+        for (let i in list_players){
+            if (list_players[i].alive) {
+                players_id.push(i);
+            }
+        }
+        if (players_id.length == 0) {
+            //wtf end or smth
+            this.end();
+        }
+        else if (players_id.length == 1){
+            list_victories[players_id]+=1;
+            for (let i in players_id){
+                storage_vict+=list_victories[i]+"&";
+            }
+            localStorage.setItem("player_victories", storage_vict);
+            this.stop();
+            this.end(list_players[players_id[0]]);
+        }
+    }
+
+    end(id=null) {
+        let nb = Math.round((Date.now())**2)%(BETS.length-1);
+        this.bet = "damn that was cool...";
+        if (id != null)
+            this.bet = id.name_player+BETS[nb];
+        this.text = new Text(this.bet);
+    }
+
+    next_game() {
+        open("continue.html", '_self');
     }
 }

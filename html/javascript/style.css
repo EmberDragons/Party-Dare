@@ -5,6 +5,22 @@ html, body {
     image-rendering: pixelated;
 }
 
+@keyframes BET_ANIMATION_IN {
+    0% { 
+        top:0%; 
+        }
+    100%   { 
+        top:50%; 
+    }
+}
+@keyframes BET_ANIMATION_OUT {
+    0% { 
+        top:50%; 
+        }
+    100%   { 
+        top:0%; 
+    }
+}
 
 #canvas {
     background-color: aliceblue;
@@ -35,7 +51,7 @@ html, body {
 .centered {
     position: absolute;
     right:50%;
-    left:40%; /*or not...*/
+    align-items: center;
     width:90px;
 }
 
@@ -59,4 +75,20 @@ html, body {
     margin-left: 20px;
     font-size: 24px;
     border-radius: 10px;
+}
+
+#BET {
+    color: aliceblue;
+    opacity: 75%;
+    border-radius: 10px;
+    background-color: aqua;
+    text-align: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    z-index: 999;
+    font-size: 35px;
+
+    top:-10%;
+    transition: 0.2s;
 }

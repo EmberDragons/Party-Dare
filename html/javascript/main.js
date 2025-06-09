@@ -8,7 +8,8 @@ const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 export const FRAMERATE = 60;
 
-var list_players = [];
+export var list_players = [];
+export var list_victories= [];
 export const list_all_movement_keys = {"0":["w","s","a","d"],
                                 "1":["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"],
                                 "2":["i","k","j","l"],
@@ -51,9 +52,11 @@ export const setPlayer = () => {
             var player = new Player({
                 ctx:ctx,
                 p_id:parseInt(i),
+                name_player:players[i],
                 startingPos:new vector2(Math.round(WINDOW_SIZE.x/2),Math.round(WINDOW_SIZE.y/2)+12),
             });
             list_players.push(player);
+            list_victories.push(parseInt(vict[i]));
         }
     }
 }
@@ -87,5 +90,5 @@ const draw = () => {
 }
 
 
-const gameLoop = new GameLoop(update, draw);
+export const gameLoop = new GameLoop(update, draw);
 gameLoop.start();
