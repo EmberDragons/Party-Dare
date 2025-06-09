@@ -7,6 +7,7 @@ class Ressources {
             img_background:"./javascript/src/img_background.jpg",
             circle:"./javascript/src/circle.png",
             horizontal:"./javascript/src/horizontal.png",
+            vertical:"./javascript/src/vertical.png",
         };
 
         this.images={};

@@ -104,7 +104,7 @@ class AttackCircle {
     }
 }
 
-class AttackBar {
+class AttackHorizontal {
     constructor ({
             pos,
             size,
@@ -207,6 +207,109 @@ class AttackBar {
     }
 }
 
+class AttackVertical {
+    constructor ({
+            pos,
+            size,
+            speed
+        }) {
+        this.size = size;
+        if (size<MIN_SIZE){
+            this.size=MIN_SIZE;
+        }
+        if (size>MAX_SIZE){
+            this.size=MAX_SIZE;
+        }
+
+        this.speed = speed;
+
+        this.position = pos ?? new vector2(0,0);
+        
+        this.sprite = new Sprite({_ressource:ressources.images["vertical"], 
+            frameSize:new vector2(32,32), 
+            scale:this.size, 
+            position:pos,
+            isPixelated:true,
+            opacity:0.6});
+        this.sprite.updateSizeX(0);
+        this.sprite.updateSizeY(50);
+        
+        this.alert_sprite = new Sprite({_ressource:ressources.images["vertical"], 
+            frameSize:new vector2(32,32), 
+            scale:this.size, 
+            position:pos,
+            isPixelated:true,
+            opacity:0.2});
+        this.alert_sprite.updateSizeY(50);
+
+        this.render = true;
+        this.current_size = 0;
+    }
+    update() {
+        this.sprite.position = this.position;
+        if (this.current_size<this.size)
+            this.current_size+=this.speed;
+        else{
+            this.destroy();
+        }
+        if (this.current_size>=this.size*0.99){
+            //kill players inside
+            this.sprite.opacity=1;
+            this.kill();
+        }
+    }
+    draw() {
+        if (this.render){
+            const DrawX = this.position.x - (this.sprite.frameSize.x * this.sprite.xScale) / 2;
+            const DrawY = this.position.y - (this.sprite.frameSize.y * this.sprite.yScale) / 2;
+            this.sprite.drawSprite(ctx, false, DrawX, DrawY);
+            this.alert_sprite.drawSprite(ctx, false, this.position.x-16*this.size, DrawY);
+            this.sprite.updateSizeX(this.current_size);
+        }
+    }
+
+    kill() {
+        if (this.render){
+            for (let i in list_players){
+                var attackSize = list_players[i].sprite.yScale+this.current_size*3.8; 
+                if (attackSize>15.5) attackSize = 15.5;
+                if (this.size<=2) {
+                    attackSize = 5+this.size*this.size*1.7;
+                }
+                if (this.size<=1.5) {
+                    attackSize = 5+this.size*3.5;
+                }
+                const playerCenter = list_players[i].position.x + list_players[i].sprite.frameSize.x * list_players[i].sprite.xScale / 2;
+                const DrawX = playerCenter - (list_players[i].sprite.frameSize.x * list_players[i].sprite.xScale) / 2;
+
+                const pos = DrawX;
+                const attPos = this.position.x-11;
+                this.position=pos;
+                
+                const distBetween = Math.sqrt((attPos-pos)**2)
+                console.log(pos, attPos, distBetween, attackSize);
+
+                if (distBetween<attackSize){ 
+                    list_players[i].death();
+                }
+            }
+        }
+        this.render = false;
+    }
+
+    destroy(){
+        this.render = false;
+        let ind = 0;
+        for (let i in attackManager.attacks) {
+            if (attackManager.attacks[i] == this) {
+                ind=i;
+                break;
+            }
+        }
+        attackManager.attackstoRemove.push(ind);
+    }
+}
+
 class AttackManager {
     constructor({base_time, base_size}) {
         this.start = Date.now();
@@ -226,13 +329,14 @@ class AttackManager {
             this.timer = Date.now();
             let pos = this.getPos();
 
-            let attackType = getRandomInt(2);
+            let attackType = getRandomInt(3);
             let att;
             if(attackType == 0)
                 att = new AttackCircle({pos:pos, rad:this.size/15, speed:10/(this.delta)});
             if(attackType == 1)
-                att = new AttackBar({pos:pos, size:this.size/15, speed:10/(this.delta)});
-            
+                att = new AttackHorizontal({pos:pos, size:this.size/15, speed:10/(this.delta)});
+            if(attackType == 2)
+                att = new AttackVertical({pos:pos, size:this.size/15, speed:10/(this.delta)});
             
             if (this.attacks.length<MAX_NB_ATT)
                 this.attacks.push(att);
