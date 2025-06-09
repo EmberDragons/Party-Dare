@@ -386,7 +386,7 @@ class AttackManager {
         }    
         if (nb==1) {
             let n_nb = getRandomInt(list_players.length-1);
-            return list_players[n_nb];
+            return list_players[n_nb].position;
         }
     }
 }
