@@ -377,9 +377,17 @@ class AttackManager {
     }
 
     getPos(){
-        
-        let n_nb = getRandomInt(list_players.length-1);
-        return list_players[n_nb].position;
+        let nb = getRandomInt(2);
+        if (nb==0) {
+            let pos = new vector2(0,0);
+            pos.x = getRandomInt(WINDOW_SIZE.x);
+            pos.y = getRandomInt(WINDOW_SIZE.y*3);
+            return pos;
+        }    
+        if (nb==1) {
+            let n_nb = getRandomInt(list_players.length-1);
+            return list_players[n_nb].position;
+        }
     }
 }
 
