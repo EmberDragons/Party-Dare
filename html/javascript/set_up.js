@@ -1,5 +1,7 @@
 var list_players = [];
 
+const MAX_PLAYER = 3;
+
 function Play() {
     if (list_players.length!=0){
         let names = "";
@@ -19,14 +21,17 @@ function Play() {
 }
 
 function addPlayer() {
-    let nme = document.getElementById("name").value;
-    document.getElementById("name").value = "";
-    if (nme!="" && list_players.includes(nme)==false){
-        document.getElementById("players").innerHTML+="<div class='players' id='"+list_players.length+"'>"+nme+"</div>";
-        list_players.push(nme);
-    } else {
-        alert("Please enter a name (that is not already used)");
+    if (list_players.length<MAX_PLAYER){
+        let nme = document.getElementById("name").value;
+        document.getElementById("name").value = "";
+        if (nme!="" && list_players.includes(nme)==false){
+            document.getElementById("players").innerHTML+="<div class='players' id='"+list_players.length+"'>"+nme+"</div>";
+            list_players.push(nme);
+        } else {
+            alert("Please enter a name (that is not already used)");
+        }
     }
+    else alert("Saddly more players is not yet supported");
 }
 function removePlayer() {
     if (list_players.length!=0){
