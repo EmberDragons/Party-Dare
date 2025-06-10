@@ -1,6 +1,12 @@
-var list_players = [];
+import { AnimationLoop } from "./animation_loop.js";
+import { PlayerAnim } from "./player_animation.js";
 
+var list_players = [];
 const MAX_PLAYER = 3;
+
+const ctx = canvas.getContext("2d");
+var Anims = [];
+
 
 function Play() {
     if (list_players.length!=0){
@@ -27,6 +33,7 @@ function addPlayer() {
         if (nme!="" && list_players.includes(nme)==false){
             document.getElementById("players").innerHTML+="<div class='players' id='"+list_players.length+"'>"+nme+"</div>";
             list_players.push(nme);
+            addAnim(Anims.length, 100+list_players.length*130, 300+list_players.length*200, 150+list_players.length*120);
         } else {
             alert("Please enter a name (that is not already used)");
         }
@@ -37,7 +44,7 @@ function removePlayer() {
     if (list_players.length!=0){
         let n_list = [];
         let temp = null;
-        for (i in list_players){
+        for (let i in list_players){
             if (temp!=null) {
                 n_list.push(temp);
             }
@@ -46,5 +53,46 @@ function removePlayer() {
         list_players=n_list;
         //remove html
         document.getElementById(list_players.length).remove();
+        removeAnim()
     }
 }
+
+
+const update = () => {
+    for (let player in Anims){
+        Anims[player].move();
+    }
+}
+
+
+const draw = () => {
+    for (let player in Anims){
+        Anims[player].draw();
+    }
+}
+
+function addAnim(nb, posx, posy, dist_travel) {
+    var anim = new PlayerAnim(ctx, nb, posx, posy, dist_travel);
+    Anims.push(anim);
+}
+
+function removeAnim() {
+    let ind = Anims.length-1;
+    var tempList = [];
+    if (ind>0){
+        for (let i in Anims){
+            if (i<Anims.length-1) {
+                tempList.push(Anims[i]);
+            }
+        }
+    }
+    Anims=tempList;
+}
+
+
+const gameLoop = new AnimationLoop(update, draw);
+gameLoop.start();
+
+document.getElementById("play").onclick = Play;
+document.getElementById("add_player").onclick = addPlayer;
+document.getElementById("remove_player").onclick = removePlayer;

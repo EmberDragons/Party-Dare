@@ -55,6 +55,8 @@ export const setPlayer = () => {
                 p_id:parseInt(i),
                 name_player:players[i],
                 startingPos:new vector2(Math.round(WINDOW_SIZE.x/2),Math.round(WINDOW_SIZE.y/2)+12),
+                list_all_movement_key:list_all_movement_keys,
+                WINDOW_SIZE:WINDOW_SIZE,
             });
             list_players.push(player);
             list_victories.push(parseInt(vict[i]));

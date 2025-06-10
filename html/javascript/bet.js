@@ -23,5 +23,5 @@ export const BETS = [
     " has to clean the house tomorrow",
     " has to play next round while listening to hardstyle",
     " has to start playing wordle",
-    " has to show his instagram discover",
+    " has to show his instagram explore page",
 ]

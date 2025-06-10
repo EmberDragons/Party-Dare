@@ -3,8 +3,7 @@ import { WINDOW_SIZE } from "./main.js";
 import { ressources } from "./ressources.js";
 import { Sprite } from "./sprite.js";
 import { vector2 } from "./vector2.js";
-import { Animation } from "./animation.js";
-import { AnimationHandler } from "./animation.js";
+import { Animation, AnimationHandler } from "./animation.js";
 
 const LERP_MULT = 0.07;
 

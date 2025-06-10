@@ -7,13 +7,15 @@
         <title>Party Dare - Set Up</title>
     </head>
     <body>
-        <script src="./javascript/set_up.js"></script>
-        <button class="button" onclick="addPlayer()">add player</button>  <input id="name" class="input">
+        <canvas id="canvas"style="z-index:-1; position:absolute; left:0%; top:0%;  background-color: rgba(255, 255, 255, 0);"></canvas>
+        <script type="module" src="./javascript/set_up.js"></script>
         <br>
-        <button class="button" onclick="removePlayer()">remove player</button>
+        <button class="button" id="add_player">add player</button>  <input id="name" class="input"> <span style="color:rgb(255, 255, 255); font-size: 19px; position: relative; bottom:4px;">(3. max player)</span>
+        <br>
+        <button class="button" id="remove_player">remove player</button>
         <br>
         <div id="players"></div>
-        <button class="button centered" onclick="Play()">PLAY</button>
+        <button class="button centered" id="play">PLAY</button>
         <br><br><br><br><br><br>
         <p>
             For up to 3 players, fun and laugh garanteed!
@@ -28,11 +30,11 @@
                 3rd one (the blue caracter) => JIKL
             <br>
         <p>
-        <img src = 'javascript/src/screen_main.PNG' width="600px">
+        <img src = 'javascript/src/img_background.jpg' class="background">
 
     </body>
     
-    <footer style="position:absolute; bottom:10px; right:50%;"> 
-        <p style="align-items: center;">Made in under a week</p>
+    <footer style="position:absolute; bottom:10px; background-color:aliceblue; opacity:80%; width:100%;"> 
+        <p style="text-align: center;">Made in under a week</p>
     </footer>
 </html>
