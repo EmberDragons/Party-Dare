@@ -2,7 +2,7 @@ import { vector2 } from "./vector2.js";
 import { ressources } from "./ressources.js";
 import { Sprite } from "./sprite.js";
 
-const FRAMERATE = 60;
+const FRAMERATE = 45;
 
 export class PlayerAnim {
     constructor (ctx,nb, posx, posy, dist_travel) {
@@ -19,14 +19,14 @@ export class PlayerAnim {
     move() {
         this.fake_player.handleAnim();
         if (this.vector_move.x>0) {
-            this.flipX = false;
+            this.fake_player.flipX = false;
             if (this.fake_player.position.x<this.position.x+this.dist_travel)
                 this.fake_player.move(this.vector_move);
             else
                 this.vector_move = new vector2(-1,0);
         }
-        if (this.vector_move.x<0) {
-            this.flipX = true;
+        else if (this.vector_move.x<0) {
+            this.fake_player.flipX = true;
             if (this.fake_player.position.x>this.position.x)
                 this.fake_player.move(this.vector_move);
             else
@@ -58,6 +58,11 @@ class Player {
                                   scale:1, 
                                   position:startingPos,
                                   isPixelated:false});
+        this.moveSprite = new Sprite({_ressource:ressources.images["move_"+(p_id+1).toString()], 
+                                  frameSize:new vector2(126,126),
+                                  scale:0.5, 
+                                  position:startingPos,
+                                  isPixelated:false});
         this.position = new vector2(startingPos.x, startingPos.y);
 
         this.speed=1;
@@ -80,16 +85,19 @@ class Player {
     
     /* Player drawing part */
     drawPlayer() {
+        this.moveSprite.drawSprite(this.ctx);
         this.sprite.drawSprite(this.ctx, this.flipX);
     }
     switchFrame(frameId) {
         this.sprite.frame=frameId;
     }
     updatePosSprite() {
+        this.moveSprite.updatePosition(new vector2(Math.round(this.position.x-8), Math.round(this.position.y-20)), this.buildSpeed);
         this.sprite.updatePosition(this.position, this.buildSpeed);
     }
 
     move(dir=new vector2(0,0)) {
+        console.log(dir);
         var absolute_dir = dir.getAbsolute();
         this.position = this.position.add(absolute_dir);
         this.updatePosSprite();

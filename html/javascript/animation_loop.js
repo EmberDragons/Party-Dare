@@ -1,4 +1,4 @@
-const FRAMERATE = 60;
+const FRAMERATE = 30;
 
 export class AnimationLoop{
     constructor(update, render){
