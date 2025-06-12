@@ -24,7 +24,7 @@ function Play() {
         let victories = "";
         for (let player in list_players) {
             names+=list_players[player]+"&";
-            victories+="0&";
+            victories+=0+"&";
         }
 
         localStorage.setItem("player_names", names);
@@ -83,7 +83,7 @@ const draw = () => {
 }
 
 function addAnim(nb, posx, posy, dist_travel) {
-    var anim = new PlayerAnim(ctx, nb, posx, posy, dist_travel);
+    var anim = new PlayerAnim(ctx, nb, posx, posy, dist_travel, true, false);
     Anims.push(anim);
 }
 

@@ -5,12 +5,12 @@ import { Sprite } from "./sprite.js";
 const FRAMERATE = 45;
 
 export class PlayerAnim {
-    constructor (ctx,nb, posx, posy, dist_travel) {
+    constructor (ctx,nb, posx, posy, dist_travel, showMoveset, showVictories) {
         this.player_id = nb;
         this.position = new vector2(posx, posy);
         this.dist_travel = dist_travel;
 
-        this.fake_player = new Player({ctx:ctx,p_id:this.player_id,startingPos:this.position});
+        this.fake_player = new Player({ctx:ctx, p_id:this.player_id, startingPos:this.position, showMoveset:showMoveset, showVictories:showVictories});
         this.fake_player.isMoving=true; //we need to set it up right
 
         this.vector_move = new vector2(1,0);
@@ -44,6 +44,8 @@ class Player {
         ctx,
         p_id,
         startingPos=new vector2(0,0),
+        showMoveset,
+        showVictories,
     }) {
         this.alive=true;
         this.render=true;
@@ -63,6 +65,16 @@ class Player {
                                   scale:0.5, 
                                   position:startingPos,
                                   isPixelated:false});
+        this.victoriesText = document.createElement("p");
+
+        let list_players = localStorage.getItem("player_names").split("&");
+        this.victoriesText.innerHTML = (localStorage.getItem('player_victories').split('&')[p_id]+'<br>'+list_players[p_id]).toString();
+        this.victoriesText.style.textAlign = "center";
+        this.victoriesText.style.fontSize = "27px";
+        this.victoriesText.style.position = "absolute";
+        this.victoriesText.id = p_id.toString();
+
+
         this.position = new vector2(startingPos.x, startingPos.y);
 
         this.speed=1;
@@ -76,6 +88,10 @@ class Player {
         this.frameRateAnimation = 9; //corresponds to ... fps
         this.setAnimationHandler(startFrame = startFrame);
 
+        this.showMoveset = showMoveset;
+        this.showVictories = showVictories;
+        if (this.showVictories)
+            document.getElementById("victories").appendChild(this.victoriesText);
     }
     draw() {
         //called to update all var and sprite
@@ -85,19 +101,26 @@ class Player {
     
     /* Player drawing part */
     drawPlayer() {
-        this.moveSprite.drawSprite(this.ctx);
+        if (this.showMoveset)
+            this.moveSprite.drawSprite(this.ctx);
         this.sprite.drawSprite(this.ctx, this.flipX);
     }
     switchFrame(frameId) {
         this.sprite.frame=frameId;
     }
     updatePosSprite() {
-        this.moveSprite.updatePosition(new vector2(Math.round(this.position.x-8), Math.round(this.position.y-20)), this.buildSpeed);
+        if (this.showMoveset)
+            this.moveSprite.updatePosition(new vector2(Math.round(this.position.x-8), Math.round(this.position.y-20)), this.buildSpeed);
+        if (this.showVictories){
+            var mult = new vector2((window.innerWidth/document.getElementById("canvas").width)*2, (window.innerWidth/document.getElementById("canvas").height)); //based on window size and canvas size
+            var padding = new vector2(3.5,-7);
+            document.getElementById(this.playerId).style.left = ((this.position.x+padding.x)*mult.x).toString()+"px";
+            document.getElementById(this.playerId).style.top =  ((this.position.y+padding.y)*mult.y).toString()+"px";
+        }
         this.sprite.updatePosition(this.position, this.buildSpeed);
     }
 
     move(dir=new vector2(0,0)) {
-        console.log(dir);
         var absolute_dir = dir.getAbsolute();
         this.position = this.position.add(absolute_dir);
         this.updatePosSprite();

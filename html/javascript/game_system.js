@@ -54,6 +54,7 @@ export class GameLoop{
     }
 
     checkEnd() {
+        console.log(list_players[0].name_player, list_players[1].name_player);
         let players_id = [];
         let storage_vict = "";
         
@@ -68,7 +69,7 @@ export class GameLoop{
         }
         else if (players_id.length == 1){
             list_victories[players_id]+=1;
-            for (let i in players_id){
+            for (let i in list_players){
                 storage_vict+=list_victories[i]+"&";
             }
             localStorage.setItem("player_victories", storage_vict);

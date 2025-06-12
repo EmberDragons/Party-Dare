@@ -79,7 +79,10 @@ const draw = () => {
     
     //player logic
     //we want to draw them based on their z (y) position
-    let list_players_priorities = list_players;
+    let list_players_priorities = []; //for dome reason copying the list also comes with border effects
+    for (let id in list_players) {
+        list_players_priorities.push(list_players[id]);
+    }
     for (let id in list_players_priorities) {
         if (id>0 && list_players_priorities[id-1].position.y > list_players_priorities[id].position.y){
             //swap places
@@ -89,7 +92,7 @@ const draw = () => {
         }
     }
     for (let id in list_players_priorities) {
-        list_players[id].draw();
+        list_players_priorities[id].draw();
     }
     attackManager.draw();
 }
