@@ -54,7 +54,6 @@ export class GameLoop{
     }
 
     checkEnd() {
-        console.log(list_players[0].name_player, list_players[1].name_player);
         let players_id = [];
         let storage_vict = "";
         
@@ -65,16 +64,23 @@ export class GameLoop{
         }
         if (players_id.length == 0) {
             //wtf end or smth
-            this.end();
+            if (list_players.length == 1) {
+                storage_vict=(list_victories[0]+1)+"&";
+                localStorage.setItem("player_victories", storage_vict);
+                this.end(list_players[0].name_player);
+            }else
+                this.end();
         }
         else if (players_id.length == 1){
-            list_victories[players_id]+=1;
-            for (let i in list_players){
-                storage_vict+=list_victories[i]+"&";
+            if (list_players.length !=1) {
+                list_victories[players_id]+=1;
+                for (let i in list_players){
+                    storage_vict+=list_victories[i]+"&";
+                }
+                localStorage.setItem("player_victories", storage_vict);
+                this.stop();
+                this.end(this.firstDeath);
             }
-            localStorage.setItem("player_victories", storage_vict);
-            this.stop();
-            this.end(this.firstDeath);
         }
     }
 
